@@ -59,6 +59,7 @@ public class DefaultAnnotationKeyRegistryService implements AnnotationKeyRegistr
         List<AnnotationKey> lookup = staticFieldLookUp.lookup();
         for (AnnotationKey serviceType: lookup) {
             if (logger.isInfoEnabled()) {
+
                 // TODO zhengxgs 2018年1月9日 大数据组通过检查控制台ERROR关键字进行重启，这个输出带有ERROR导致重启，所以注释
                 // logger.info("add Default AnnotationKey:" + serviceType);
             }
