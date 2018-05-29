@@ -90,6 +90,8 @@ public class ScatterChartController {
     }
 
     /**
+     * zhengxgs 查询transaction
+     *
      * selected points from scatter chart data query
      *
      * @param requestParam

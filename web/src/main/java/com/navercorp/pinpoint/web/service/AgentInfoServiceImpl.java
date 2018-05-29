@@ -45,14 +45,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * @author netspider
@@ -77,6 +70,40 @@ public class AgentInfoServiceImpl implements AgentInfoService {
 
     @Autowired
     private AgentLifeCycleDao agentLifeCycleDao;
+
+    @Override
+    public int removeUnexpectedAgentInfo(ApplicationAgentList.Key key) {
+
+        int delCount = 0;
+        long timestamp = System.currentTimeMillis();
+        // key = hostname
+        // value= list fo agentinfo
+        List<Application> applications = applicationIndexDao.selectAllApplicationNames();
+        for (Application application : applications) {
+
+            final List<String> agentIdList = this.applicationIndexDao.selectAgentIds(application.getName());
+            if (logger.isDebugEnabled()) {
+                logger.debug("agentIdList={}", agentIdList);
+            }
+
+            if (CollectionUtils.isEmpty(agentIdList)) {
+                logger.debug("agentIdList is empty. applicationName={}", application.getName());
+                return 0;
+            }
+
+            List<AgentInfo> agentInfos = this.agentInfoDao.getAgentInfos(agentIdList, timestamp);
+            this.agentLifeCycleDao.populateAgentStatuses(agentInfos, timestamp);
+            for (AgentInfo agentInfo : agentInfos) {
+
+                AgentStatus status = agentInfo.getStatus();
+                if (status.getState().equals(AgentLifeCycleState.UNEXPECTED_SHUTDOWN)) {
+                    delCount++;
+                    applicationIndexDao.deleteAgentId(agentInfo.getApplicationName(), agentInfo.getAgentId());
+                }
+            }
+        }
+        return delCount;
+    }
 
     @Override
     public ApplicationAgentList getApplicationAgentList(ApplicationAgentList.Key key) {

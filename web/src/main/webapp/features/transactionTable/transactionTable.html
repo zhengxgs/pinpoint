@@ -15,6 +15,11 @@
                             ng-class="{true: 'glyphicon-arrow-down', false: 'glyphicon-arrow-up'}[transactionReverse]"></span></div>
                 </th>
                 <th>
+                    <div class="th-inner" ng-click="transactionOrder('endpoint')">hostname
+                        <span ng-show="transactionOrderBy == 'endpoint'"  class="glyphicon" ng-class="{true: 'glyphicon-arrow-down', false: 'glyphicon-arrow-up'}[transactionReverse]"></span>
+                    </div>
+                </th>
+                <th>
                     <div class="th-inner" ng-click="transactionOrder('application')">Path
                         <span ng-show="transactionOrderBy == 'application'"  class="glyphicon"
                            ng-class="{true: 'glyphicon-arrow-down', false: 'glyphicon-arrow-up'}[transactionReverse]"></span></div>
@@ -55,9 +60,11 @@
 						{{transaction.index | number}}
                     </td>
                     <td ng-click="traceByApplication(transaction)" sorttable_customkey="{{transaction.startTime}}">{{formatDate( transaction.startTime )}}</td>
+                    <td ng-click="traceByApplication(transaction)">{{transaction.endpoint}}</td>
                     <td ng-click="traceByApplication(transaction)">
                         {{transaction.application}}
                         <a ng-click="openTransactionView(transaction);$event.stopPropagation()" target="_blank" title="Open Mixed View in New Window" data-toggle="tooltip" data-placement="right"><span class="glyphicon glyphicon-list-alt"></span></a>
+                    </td>
                     <td ng-click="traceByApplication(transaction)" style="padding-right:15px;text-align:right">{{transaction.elapsed | number}}</td>
                     <td ng-click="traceByApplication(transaction)" style="text-align:center;"><span class="glyphicon glyphicon-fire" ng-show="transaction.exception == 1"></span></td>
                     <td ng-click="traceByApplication(transaction)">{{transaction.agentId}}</td>

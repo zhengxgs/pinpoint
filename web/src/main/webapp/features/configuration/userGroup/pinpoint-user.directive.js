@@ -206,7 +206,7 @@
 							if ( oPinpointUserList[i].userId == oPinpointUser.userId ) {
 								oPinpointUserList[i].name = oPinpointUser.name;
 								oPinpointUserList[i].department = oPinpointUser.department;
-								oPinpointUserList[i].phoneNumber = oPinpointUser.phone;
+								oPinpointUserList[i].phoneNumber = oPinpointUser.phoneNumber;
 								oPinpointUserList[i].email = oPinpointUser.email;
 								break;
 							}
@@ -362,9 +362,13 @@
 				return;
 			}
 			if ( oNewPinpointUser.phoneNumber !== "" && validatePhone( oNewPinpointUser.phoneNumber ) === false ) {
+                /*
+                zhengxgs 去掉验证，phoneNumber字段实际存的是wxId
+
 				addBlink( aEditNode );
 				cbFail({ errorMessage: CONSTS.YOU_CAN_ONLY_INPUT_NUMBERS });
 				return;
+                 */
 			}
 			if ( oNewPinpointUser.email !== "" && validateEmail( oNewPinpointUser.email ) === false ) {
 				addBlink( aEditNode );
@@ -446,9 +450,13 @@
 				return;
 			}
 			if ( oPinpointUser.phoneNumber !== "" && validatePhone( oPinpointUser.phoneNumber ) === false ) {
+                /*
+                zhengxgs
+
 				addBlink( aEditNode );
 				cbFail({ errorMessage: CONSTS.YOU_CAN_ONLY_INPUT_NUMBERS });
 				return;
+				*/
 			}
 			if ( oPinpointUser.email !== "" && validateEmail( oPinpointUser.email ) === false ) {
 				addBlink( aEditNode );
