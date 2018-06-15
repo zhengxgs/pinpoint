@@ -18,7 +18,7 @@ public class WxNotifyUtils {
 
 
     public static void main(String[] args) {
-        sendMsg("qihongning", "出错");
+        sendMsg("16", "出错");
     }
 
     public static void sendMsg(final String recever, final String content) {

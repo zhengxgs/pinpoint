@@ -16,15 +16,14 @@
 
 package com.navercorp.pinpoint.web.alarm;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.batch.item.ItemWriter;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.navercorp.pinpoint.web.alarm.checker.AlarmChecker;
 import com.navercorp.pinpoint.web.alarm.vo.CheckerResult;
 import com.navercorp.pinpoint.web.service.AlarmService;
+import org.springframework.batch.item.ItemWriter;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author minwoo.jung
@@ -41,17 +40,17 @@ public class AlarmWriter implements ItemWriter<AlarmChecker> {
     public void write(List<? extends AlarmChecker> checkers) throws Exception {
         Map<String, CheckerResult> beforeCheckerResults = alarmService.selectBeforeCheckerResults(checkers.get(0).getRule().getApplicationId());
 
-        for(AlarmChecker checker : checkers) {
+        for (AlarmChecker checker : checkers) {
             CheckerResult beforeCheckerResult = beforeCheckerResults.get(checker.getRule().getCheckerName());
-            
+
             if (beforeCheckerResult == null) {
-                beforeCheckerResult = new CheckerResult(checker.getRule().getApplicationId(), checker.getRule().getCheckerName(), false, 0 , 1);
-            }
-            
-            if (checker.isDetected()) {
-                    sendAlarmMessage(beforeCheckerResult, checker);
+                beforeCheckerResult = new CheckerResult(checker.getRule().getApplicationId(), checker.getRule().getCheckerName(), false, 0, 1);
             }
 
+            if (checker.isDetected()) {
+                sendAlarmMessage(beforeCheckerResult, checker);
+            }
+            // 插入alarm_history一条记录，如果达到阈值，则Detected字段为true，否则为false。该表会被重复删除记录
             alarmService.updateBeforeCheckerResult(beforeCheckerResult, checker);
         }
     }

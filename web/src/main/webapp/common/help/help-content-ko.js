@@ -49,6 +49,9 @@
 						name: "TOTAL COUNT TO CALLEE",
 						desc: "외부에서 application을 호출한 요청 개수가 임계치를 초과한 경우 알람이 전송된다."
 					},{
+						name: "GC COUNT",
+						desc: "application GC次数告警配置"
+					},{
 						name: "HEAP USAGE RATE",
 						desc: "heap의 사용률이 임계치를 초과한 경우 알람이 전송된다."
 					},{

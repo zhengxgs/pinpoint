@@ -16,18 +16,6 @@
 
 package com.navercorp.pinpoint.web.alarm;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-
-import org.springframework.batch.core.ExitStatus;
-import org.springframework.batch.core.StepExecution;
-import org.springframework.batch.core.StepExecutionListener;
-import org.springframework.batch.item.ItemReader;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.navercorp.pinpoint.web.alarm.DataCollectorFactory.DataCollectorCategory;
 import com.navercorp.pinpoint.web.alarm.checker.AlarmChecker;
 import com.navercorp.pinpoint.web.alarm.collector.DataCollector;
@@ -35,6 +23,13 @@ import com.navercorp.pinpoint.web.alarm.vo.Rule;
 import com.navercorp.pinpoint.web.dao.ApplicationIndexDao;
 import com.navercorp.pinpoint.web.service.AlarmService;
 import com.navercorp.pinpoint.web.vo.Application;
+import org.springframework.batch.core.ExitStatus;
+import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.StepExecutionListener;
+import org.springframework.batch.item.ItemReader;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.*;
 
 /**
  * @author minwoo.jung
@@ -65,6 +60,10 @@ public class AlarmReader implements ItemReader<AlarmChecker>, StepExecutionListe
         return checkers.poll();
     }
 
+    /**
+     * zhengxgs
+     * AlarmReader 查询Application列表，获取到app的alarm rule，通过rules name取到对应的rule实现类
+     * */
     @Override
     public void beforeStep(StepExecution stepExecution) {
         List<Application> applicationList = applicationIndexDao.selectAllApplicationNames();
@@ -79,8 +78,6 @@ public class AlarmReader implements ItemReader<AlarmChecker>, StepExecutionListe
         if (appSize < to) {
             to = appSize;
         }
-
-        
         for(int i = from; i < to; i++) {
             addChecker(applicationList.get(i));
         }
@@ -89,12 +86,15 @@ public class AlarmReader implements ItemReader<AlarmChecker>, StepExecutionListe
     private void addChecker(Application application) {
         List<Rule> rules = alarmService.selectRuleByApplicationId(application.getName());
         long timeSlotEndTime = System.currentTimeMillis();
+
+        // 存放所有类型数据检查器
         Map<DataCollectorCategory, DataCollector> collectorMap = new HashMap<>();
         
         for (Rule rule : rules) {
+            // 根据告警类型取 各类型的检查器
             CheckerCategory checkerCategory = CheckerCategory.getValue(rule.getCheckerName());
             DataCollector collector = collectorMap.get(checkerCategory.getDataCollectorCategory());
-            
+            //
             if(collector == null) {
                 collector = dataCollectorFactory.createDataCollector(checkerCategory, application, timeSlotEndTime);
                 collectorMap.put(collector.getDataCollectorCategory(), collector);

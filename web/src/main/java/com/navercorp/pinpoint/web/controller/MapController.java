@@ -212,8 +212,7 @@ public class MapController {
         if (searchOption == null) {
             throw new NullPointerException("searchOption must not be null");
         }
-
-        logger.info("getServerMap() application:{} range:{} searchOption:{}", application, range, searchOption);
+        logger.debug("getServerMap() application:{} range:{} searchOption:{}", application, range, searchOption);
 
         ApplicationMap map = mapService.selectApplicationMap(application, range, searchOption, nodeType, linkType);
         

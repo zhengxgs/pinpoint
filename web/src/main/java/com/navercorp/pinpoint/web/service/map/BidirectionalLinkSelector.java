@@ -74,9 +74,9 @@ public class BidirectionalLinkSelector implements LinkSelector {
 
         while (!applications.isEmpty()) {
 
-            logger.info("depth search start. callerDepth:{}, calleeDepth:{}, size:{}, nodes:{}", linkSelectContext.getCallerDepth(), linkSelectContext.getCalleeDepth(), applications.size(), applications);
+            logger.debug("depth search start. callerDepth:{}, calleeDepth:{}, size:{}, nodes:{}", linkSelectContext.getCallerDepth(), linkSelectContext.getCalleeDepth(), applications.size(), applications);
             LinkDataDuplexMap levelData = applicationsMapCreator.createLinkDataDuplexMap(applications, linkSelectContext);
-            logger.info("depth search end. callerDepth:{}, calleeDepth:{}", linkSelectContext.getCallerDepth(), linkSelectContext.getCalleeDepth());
+            logger.debug("depth search end. callerDepth:{}, calleeDepth:{}", linkSelectContext.getCallerDepth(), linkSelectContext.getCalleeDepth());
 
             linkDataDuplexMap.addLinkDataDuplexMap(levelData);
 
